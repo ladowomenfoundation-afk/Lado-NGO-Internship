@@ -3,27 +3,74 @@
 <head>
   <title>Lado Internship Verification</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body{
+      font-family: Arial;
+      text-align:center;
+      background:#f4f6f8;
+      padding:40px;
+    }
+
+    .box{
+      background:white;
+      padding:20px;
+      border-radius:10px;
+      width:90%;
+      max-width:400px;
+      margin:auto;
+      box-shadow:0px 0px 10px rgba(0,0,0,0.1);
+    }
+
+    input{
+      width:90%;
+      padding:10px;
+      margin-top:10px;
+      border:1px solid #ccc;
+      border-radius:5px;
+    }
+
+    button{
+      margin-top:10px;
+      padding:10px 20px;
+      background:green;
+      color:white;
+      border:none;
+      border-radius:5px;
+      cursor:pointer;
+    }
+
+    #result{
+      margin-top:20px;
+      text-align:left;
+      font-size:15px;
+      line-height:1.6;
+    }
+
+    .ok{color:green;font-weight:bold;}
+    .bad{color:red;font-weight:bold;}
+  </style>
 </head>
 
-<body style="font-family:Arial;text-align:center;padding:40px;background:#f5f5f5;">
+<body>
 
-<h2>Internship Certificate Verification</h2>
+<div class="box">
 
-<input id="search" placeholder="Enter ID / Name / Certificate No"
-style="padding:10px;width:250px;border:1px solid #ccc;border-radius:5px;">
+  <h2>Internship Verification</h2>
 
-<br><br>
+  <input id="search" placeholder="Enter ID / Certificate No">
 
-<button onclick="verify()"
-style="padding:10px 20px;background:green;color:white;border:none;border-radius:5px;">
-VERIFY
-</button>
+  <br>
 
-<div id="result" style="margin-top:30px;font-size:18px;"></div>
+  <button onclick="verify()">VERIFY</button>
+
+  <div id="result"></div>
+
+</div>
 
 <script>
 
-function verify() {
+function verify(){
 
   let id = document.getElementById("search").value;
 
@@ -34,28 +81,29 @@ function verify() {
   .then(res => res.json())
   .then(res => {
 
-    if(res.status === "found") {
+    if(res.status === "found"){
 
       let d = res.data;
 
-      document.getElementById("result").innerHTML =
-        "<h3 style='color:green'>✔️ VERIFIED</h3>" +
-        "<b>Name:</b> " + d.name + "<br>" +
-        "<b>Father:</b> " + d.father + "<br>" +
-        "<b>College:</b> " + d.college + "<br>" +
-        "<b>Roll No:</b> " + d.roll + "<br>" +
-        "<b>Certificate No:</b> " + d.certificate + "<br>" +
-        "<b>Status:</b> " + d.status;
+      document.getElementById("result").innerHTML = `
+        <div class="ok">✔️ VERIFIED</div><br>
+
+        <b>Name:</b> ${d.name || ""}<br>
+        <b>Father:</b> ${d.father || ""}<br>
+        <b>Roll No:</b> ${d.roll || ""}<br>
+        <b>Certificate No:</b> ${d.certificate || ""}<br>
+        <b>Status:</b> ${d.status || ""}
+      `;
 
     } else {
       document.getElementById("result").innerHTML =
-        "<h3 style='color:red'>❌ NOT FOUND</h3>";
+        "<div class='bad'>❌ NOT FOUND</div>";
     }
 
   })
   .catch(() => {
     document.getElementById("result").innerHTML =
-      "Server Error";
+      "<div class='bad'>Server Error</div>";
   });
 
 }
