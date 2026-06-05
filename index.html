@@ -1,177 +1,162 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Lado Internship Verification System</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<title>Internship Verification Portal</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    body{
-      margin:0;
-      font-family:Arial;
-      background:#f4f6f8;
-    }
+<style>
+body{
+    margin:0;
+    font-family:Arial;
+    background:#f4f6f9;
+}
 
-    .header{
-      background:green;
-      color:white;
-      padding:18px;
-      text-align:center;
-      font-size:20px;
-      font-weight:bold;
-    }
+.header{
+    background:#0b3d91;
+    color:white;
+    padding:25px;
+    text-align:center;
+}
 
-    .container{
-      max-width:700px;
-      margin:20px auto;
-      background:white;
-      padding:20px;
-      border-radius:12px;
-      box-shadow:0 0 10px rgba(0,0,0,0.1);
-    }
+.container{
+    max-width:800px;
+    margin:30px auto;
+    background:white;
+    padding:20px;
+    border-radius:10px;
+}
 
-    input{
-      width:100%;
-      padding:12px;
-      margin-top:10px;
-      border:1px solid #ccc;
-      border-radius:8px;
-      font-size:15px;
-    }
+input{
+    width:100%;
+    padding:12px;
+    border:1px solid #ccc;
+    border-radius:6px;
+    font-size:16px;
+}
 
-    button{
-      width:100%;
-      margin-top:12px;
-      padding:12px;
-      background:green;
-      color:white;
-      border:none;
-      border-radius:8px;
-      font-size:16px;
-      cursor:pointer;
-    }
+button{
+    width:100%;
+    padding:12px;
+    margin-top:10px;
+    background:#198754;
+    color:white;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+}
 
-    button:hover{
-      background:#0a7a0a;
-    }
+button:hover{
+    background:#157347;
+}
 
-    .card{
-      margin-top:15px;
-      padding:15px;
-      background:#f9f9f9;
-      border-radius:10px;
-      line-height:1.7;
-    }
+.card{
+    margin-top:20px;
+    padding:15px;
+    border:1px solid #ddd;
+    border-radius:8px;
+    background:#fafafa;
+}
 
-    .ok{
-      color:green;
-      font-weight:bold;
-      font-size:18px;
-      margin-top:10px;
-    }
+.row{
+    margin:6px 0;
+}
 
-    .bad{
-      color:red;
-      font-weight:bold;
-      font-size:18px;
-      margin-top:10px;
-    }
+.success{color:green;font-weight:bold;}
+.error{color:red;font-weight:bold;}
 
-    .small{
-      font-size:13px;
-      color:gray;
-      margin-top:5px;
-    }
+.badge{
+    padding:4px 8px;
+    border-radius:4px;
+    color:white;
+    font-size:12px;
+}
 
-    .footer{
-      text-align:center;
-      font-size:12px;
-      padding:20px;
-      color:gray;
-    }
-  </style>
+.green{background:green;}
+</style>
 </head>
 
 <body>
 
 <div class="header">
-  Lado Women Foundation<br>
-  Internship Verification System
+    <h2>Internship Certificate Verification</h2>
+    <p>Lado Women Foundation</p>
 </div>
 
 <div class="container">
 
-  <h3>Verify Certificate</h3>
+    <input type="text" id="search" placeholder="Enter Internship ID / Name / Certificate No">
+    <button onclick="verify()">Verify</button>
 
-  <input id="search" placeholder="Enter Internship ID / Certificate No / Roll No">
+    <div id="result"></div>
 
-  <button onclick="verify()">VERIFY NOW</button>
-
-  <div class="small">
-    Example: LWF2026 / CERT123 / ROLL45
-  </div>
-
-  <div id="result"></div>
-
-</div>
-
-<div class="footer">
-  © Lado Women Foundation | Verification System
 </div>
 
 <script>
 
 const API_URL = "https://script.google.com/macros/s/AKfycbzi2xOyd7OXiAEx8ZFeRgdGuKp_cykUrj7n84pujLRgZiO7YdZbZ_StIB04Qn0ecjWvTQ/exec";
 
-function verify(){
+function clean(v){
+    return (v ?? "-");
+}
 
-  let search = document.getElementById("search").value.trim();
+async function verify(){
 
-  if(search === ""){
-    document.getElementById("result").innerHTML =
-      "<div class='bad'>⚠️ Please enter ID</div>";
-    return;
-  }
+    let search = document.getElementById("search").value.trim();
+    let result = document.getElementById("result");
 
-  document.getElementById("result").innerHTML =
-    "<div class='small'>Checking...</div>";
-
-  fetch(API_URL + "?search=" + encodeURIComponent(search))
-  .then(res => res.json())
-  .then(data => {
-
-    if(data.status === "found"){
-
-      let d = data.data;
-
-      document.getElementById("result").innerHTML =
-        "<div class='ok'>✔️ VERIFIED SUCCESSFULLY</div>" +
-        "<div class='card'>" +
-        "<b>Internship ID:</b> " + d.internshipId + "<br>" +
-        "<b>Student Name:</b> " + d.studentName + "<br>" +
-        "<b>Father Name:</b> " + d.fatherName + "<br>" +
-        "<b>College:</b> " + d.college + "<br>" +
-        "<b>Roll No:</b> " + d.rollNo + "<br>" +
-        "<b>Class:</b> " + d.class + "<br>" +
-        "<b>Semester:</b> " + d.semester + "<br>" +
-        "<b>Duration:</b> " + d.duration + "<br>" +
-        "<b>Certificate No:</b> " + d.certificateNo + "<br>" +
-        "<b>Issue Date:</b> " + d.issueDate + "<br>" +
-        "<b>Status:</b> " + d.status + "<br>" +
-        "<b>Organisation:</b> " + d.organisationName +
-        "</div>";
-
-    } else {
-      document.getElementById("result").innerHTML =
-        "<div class='bad'>❌ NOT FOUND</div>" +
-        "<div class='small'>Please check ID and try again</div>";
+    if(!search){
+        result.innerHTML = "<p class='error'>Enter value first</p>";
+        return;
     }
 
-  })
-  .catch(err => {
-    document.getElementById("result").innerHTML =
-      "<div class='bad'>Server Error</div>";
-  });
+    result.innerHTML = "<p>Checking...</p>";
 
+    try{
+
+        const res = await fetch(API_URL + "?search=" + encodeURIComponent(search));
+        const json = await res.json();
+
+        console.log(json); // DEBUG (important)
+
+        if(json.verified && json.data){
+
+            const d = json.data;
+
+            result.innerHTML = `
+            <div class="card">
+
+                <div class="success">✅ VERIFIED</div>
+
+                <div class="row"><b>Student Name:</b> ${clean(d["Student Name"])}</div>
+                <div class="row"><b>Internship ID:</b> ${clean(d["Internship ID"])}</div>
+                <div class="row"><b>Father Name:</b> ${clean(d["Father Name"])}</div>
+                <div class="row"><b>College:</b> ${clean(d["College"])}</div>
+                <div class="row"><b>Roll No:</b> ${clean(d["Roll No"])}</div>
+                <div class="row"><b>Class:</b> ${clean(d["Class"])}</div>
+                <div class="row"><b>Semester:</b> ${clean(d["Semester"])}</div>
+                <div class="row"><b>Duration:</b> ${clean(d["Duration"])}</div>
+                <div class="row"><b>Certificate No:</b> ${clean(d["Certificate No"])}</div>
+                <div class="row"><b>Issue Date:</b> ${clean(d["Issue Date"])}</div>
+
+                <div class="row">
+                    <b>Status:</b>
+                    <span class="badge green">${clean(d["Status"])}</span>
+                </div>
+
+                <div class="row"><b>Organisation:</b> ${clean(d["Organisation"])}</div>
+
+            </div>
+            `;
+        }
+        else{
+            result.innerHTML = "<p class='error'>❌ Record Not Found</p>";
+        }
+
+    } catch(err){
+        console.log(err);
+        result.innerHTML = "<p class='error'>Server Error</p>";
+    }
 }
 
 </script>
